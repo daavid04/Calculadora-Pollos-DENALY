@@ -1,443 +1,164 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const DenalyGroupApp());
-}
+void main() => runApp(MyApp());
 
-// ============================================================
-// MODELO DE MOVIMIENTO
-// ============================================================
+class Lote {
+  String id;
+  int pollos;
+  int dias;
+  double consumo;
+  double precio;
+  double mortalidad;
+  double ganancia;
+  double gananciaXPollo;
+  DateTime fecha;
 
-class Movimiento {
-  final String tipo;
-  final double monto;
-  final String categoria;
-  final String descripcion;
-  final DateTime fecha;
-
-  Movimiento({
-    required this.tipo,
-    required this.monto,
-    required this.categoria,
-    required this.descripcion,
+  Lote({
+    required this.id,
+    required this.pollos,
+    required this.dias,
+    required this.consumo,
+    required this.precio,
+    required this.mortalidad,
+    required this.ganancia,
+    required this.gananciaXPollo,
     required this.fecha,
   });
 }
 
-// ============================================================
-// APLICACIÓN
-// ============================================================
-
-class DenalyGroupApp extends StatelessWidget {
-  const DenalyGroupApp({super.key});
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Calculadora Pollos La Joya',
+      theme: ThemeData(primarySwatch: Colors.green),
+      home: CalculadoraPage(),
       debugShowCheckedModeBanner: false,
-      title: 'DENALY GROUP',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-        ),
-        useMaterial3: true,
-      ),
-      home: const InicioPage(),
     );
   }
 }
 
-// ============================================================
-// PANTALLA PRINCIPAL
-// ============================================================
-
-class InicioPage extends StatefulWidget {
-  const InicioPage({super.key});
-
+class CalculadoraPage extends StatefulWidget {
   @override
-  State<InicioPage> createState() => _InicioPageState();
+  _CalculadoraPageState createState() => _CalculadoraPageState();
 }
 
-class _InicioPageState extends State<InicioPage> {
-  final List<Movimiento> movimientos = [];
+class _CalculadoraPageState extends State<CalculadoraPage> {
+  final pollosCtrl = TextEditingController(text: '800');
+  final diasCtrl = TextEditingController(text: '42');
+  final consumoCtrl = TextEditingController(text: '4.5');
+  final precioCtrl = TextEditingController(text: '11');
+  final mortalidadCtrl = TextEditingController(text: '5');
 
-  // ----------------------------------------------------------
-  // INGRESOS DEL DÍA
-  // ----------------------------------------------------------
+  List<Lote> historial = [];
 
-  double get ingresosDia {
-    final ahora = DateTime.now();
+  // Resultados
+  double totalKg=0, costoTotal=0, gananciaReal=0, gananciaXPollo=0, ingresoReal=0;
+  double sacosI=0, sacosC=0, sacosA=0, sacosT=0;
+  double kgMaiz=0, kgSoya=0, kgAceite=0, kgNucleo=0, costoIngred=0;
+  double pollosVivos=0;
+  List<Map<String, dynamic>> flujoSemanal = [];
 
-    return movimientos
-        .where((m) =>
-            m.tipo == 'Ingreso' &&
-            m.fecha.year == ahora.year &&
-            m.fecha.month == ahora.month &&
-            m.fecha.day == ahora.day)
-        .fold(0, (total, m) => total + m.monto);
+  void calcular() {
+    setState(() {
+      double pollos = double.parse(pollosCtrl.text);
+      double dias = double.parse(diasCtrl.text);
+      double consumo = double.parse(consumoCtrl.text);
+      double precio = double.parse(precioCtrl.text);
+      double mort = double.parse(mortalidadCtrl.text) / 100;
+
+      totalKg = pollos * consumo;
+      sacosI = (totalKg * 0.20 / 50).ceilToDouble();
+      sacosC = (totalKg * 0.35 / 50).ceilToDouble();
+      sacosA = (totalKg * 0.45 / 50).ceilToDouble();
+      sacosT = sacosI + sacosC + sacosA;
+
+      kgMaiz = totalKg * 0.64;
+      double sMaiz = (kgMaiz/50).ceilToDouble();
+      kgSoya = totalKg * 0.28;
+      double sSoya = (kgSoya/50).ceilToDouble();
+      kgAceite = totalKg * 0.009;
+      double sAceite = (kgAceite/50).ceilToDouble();
+      kgNucleo = totalKg * 0.05;
+      double sNucleo = (kgNucleo/50).ceilToDouble();
+      costoIngred = (sMaiz*110)+(sSoya*165)+(sAceite*280)+(sNucleo*220);
+
+      double costoAlimento = totalKg * 2.87;
+      double costoPollitos = pollos * 3;
+      double costoOtros = 700;
+      costoTotal = costoAlimento + costoPollitos + costoOtros;
+
+      pollosVivos = pollos * (1 - mort);
+      double pesoTotal = pollosVivos * 3;
+      ingresoReal = pesoTotal * precio;
+
+      gananciaReal = ingresoReal - costoTotal;
+      gananciaXPollo = pollosVivos > 0? gananciaReal / pollosVivos : 0;
+
+      flujoSemanal = [
+        {'sem':1, 'kg':totalKg*0.03, 'costo':totalKg*0.03*2.87},
+        {'sem':2, 'kg':totalKg*0.07, 'costo':totalKg*0.07*2.87},
+        {'sem':3, 'kg':totalKg*0.15, 'costo':totalKg*0.15*2.87},
+        {'sem':4, 'kg':totalKg*0.25, 'costo':totalKg*0.25*2.87},
+        {'sem':5, 'kg':totalKg*0.30, 'costo':totalKg*0.30*2.87},
+        {'sem':6, 'kg':totalKg*0.20, 'costo':totalKg*0.20*2.87},
+      ];
+    });
   }
 
-  // ----------------------------------------------------------
-  // SALIDAS DEL DÍA
-  // ----------------------------------------------------------
-
-  double get salidasDia {
-    final ahora = DateTime.now();
-
-    return movimientos
-        .where((m) =>
-            m.tipo == 'Salida' &&
-            m.fecha.year == ahora.year &&
-            m.fecha.month == ahora.month &&
-            m.fecha.day == ahora.day)
-        .fold(0, (total, m) => total + m.monto);
+  void guardarLote() {
+    calcular();
+    setState(() {
+      historial.add(Lote(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        pollos: int.parse(pollosCtrl.text),
+        dias: int.parse(diasCtrl.text),
+        consumo: double.parse(consumoCtrl.text),
+        precio: double.parse(precioCtrl.text),
+        mortalidad: double.parse(mortalidadCtrl.text),
+        ganancia: gananciaReal,
+        gananciaXPollo: gananciaXPollo,
+        fecha: DateTime.now(),
+      ));
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Lote guardado con éxito ✅'), backgroundColor: Colors.green)
+    );
   }
 
-  // ----------------------------------------------------------
-  // INGRESOS DEL MES
-  // ----------------------------------------------------------
-
-  double get ingresosMes {
-    final ahora = DateTime.now();
-
-    return movimientos
-        .where((m) =>
-            m.tipo == 'Ingreso' &&
-            m.fecha.year == ahora.year &&
-            m.fecha.month == ahora.month)
-        .fold(0, (total, m) => total + m.monto);
-  }
-
-  // ----------------------------------------------------------
-  // SALIDAS DEL MES
-  // ----------------------------------------------------------
-
-  double get salidasMes {
-    final ahora = DateTime.now();
-
-    return movimientos
-        .where((m) =>
-            m.tipo == 'Salida' &&
-            m.fecha.year == ahora.year &&
-            m.fecha.month == ahora.month)
-        .fold(0, (total, m) => total + m.monto);
-  }
-
-  // ----------------------------------------------------------
-  // MOSTRAR FORMULARIO
-  // ----------------------------------------------------------
-
-  void mostrarFormulario() {
-    String tipo = 'Ingreso';
-    String categoria = 'Ventas';
-    DateTime fechaSeleccionada = DateTime.now();
-
-    final montoController = TextEditingController();
-    final descripcionController = TextEditingController();
-
+  void verHistorial() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, cambiar) {
-            return Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 20,
-                bottom:
-                    MediaQuery.of(context).viewInsets.bottom + 20,
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment:
-                      CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      'REGISTRAR MOVIMIENTO',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    SegmentedButton<String>(
-                      segments: const [
-                        ButtonSegment(
-                          value: 'Ingreso',
-                          label: Text('Ingreso'),
-                          icon:
-                              Icon(Icons.arrow_downward),
-                        ),
-                        ButtonSegment(
-                          value: 'Salida',
-                          label: Text('Salida'),
-                          icon:
-                              Icon(Icons.arrow_upward),
-                        ),
-                      ],
-                      selected: {tipo},
-                      onSelectionChanged: (valor) {
-                        cambiar(() {
-                          tipo = valor.first;
-                        });
-                      },
-                    ),
-
-                    const SizedBox(height: 18),
-
-                    TextField(
-                      controller: montoController,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      decoration:
-                          const InputDecoration(
-                        labelText: 'Monto',
-                        prefixText: 'S/ ',
-                        border:
-                            OutlineInputBorder(),
-                      ),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    DropdownButtonFormField<String>(
-                      value: categoria,
-                      decoration:
-                          const InputDecoration(
-                        labelText: 'Categoría',
-                        border:
-                            OutlineInputBorder(),
-                      ),
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'Ventas',
-                          child: Text('Ventas'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Compras',
-                          child: Text('Compras'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Servicios',
-                          child: Text('Servicios'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Transporte',
-                          child: Text('Transporte'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Sueldos',
-                          child: Text('Sueldos'),
-                        ),
-                        DropdownMenuItem(
-                          value: 'Otros',
-                          child: Text('Otros'),
-                        ),
-                      ],
-                      onChanged: (valor) {
-                        cambiar(() {
-                          categoria = valor!;
-                        });
-                      },
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    TextField(
-                      controller:
-                          descripcionController,
-                      maxLines: 2,
-                      decoration:
-                          const InputDecoration(
-                        labelText: 'Descripción',
-                        hintText:
-                            'Ejemplo: Venta de productos',
-                        border:
-                            OutlineInputBorder(),
-                      ),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    // FECHA
-                    OutlinedButton.icon(
-                      onPressed: () async {
-                        final fecha =
-                            await showDatePicker(
-                          context: context,
-                          initialDate:
-                              fechaSeleccionada,
-                          firstDate:
-                              DateTime(2020),
-                          lastDate:
-                              DateTime(2100),
-                        );
-
-                        if (fecha != null) {
-                          cambiar(() {
-                            fechaSeleccionada =
-                                fecha;
-                          });
-                        }
-                      },
-                      icon: const Icon(
-                          Icons.calendar_month),
-                      label: Text(
-                        'Fecha: '
-                        '${fechaSeleccionada.day}/'
-                        '${fechaSeleccionada.month}/'
-                        '${fechaSeleccionada.year}',
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    SizedBox(
-                      height: 52,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          final monto =
-                              double.tryParse(
-                            montoController.text
-                                .trim(),
-                          );
-
-                          if (monto == null ||
-                              monto <= 0) {
-                            ScaffoldMessenger.of(
-                                    context)
-                                .showSnackBar(
-                              const SnackBar(
-                                content: Text(
-                                  'Ingrese un monto válido',
-                                ),
-                              ),
-                            );
-                            return;
-                          }
-
-                          final movimiento =
-                              Movimiento(
-                            tipo: tipo,
-                            monto: monto,
-                            categoria:
-                                categoria,
-                            descripcion:
-                                descripcionController
-                                    .text
-                                    .trim(),
-                            fecha:
-                                fechaSeleccionada,
-                          );
-
-                          setState(() {
-                            movimientos.add(
-                              movimiento,
-                            );
-                          });
-
-                          Navigator.pop(context);
-
-                          ScaffoldMessenger.of(
-                                  this.context)
-                              .showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                '$tipo de S/ '
-                                '${monto.toStringAsFixed(2)} '
-                                'registrado correctamente',
-                              ),
-                            ),
-                          );
-                        },
-                        icon: const Icon(Icons.save),
-                        label: const Text(
-                          'GUARDAR MOVIMIENTO',
-                          style: TextStyle(
-                            fontWeight:
-                                FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  // ----------------------------------------------------------
-  // HISTORIAL
-  // ----------------------------------------------------------
-
-  void mostrarHistorial() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => HistorialPage(
-          movimientos: movimientos,
-          eliminarMovimiento: (movimiento) {
-            setState(() {
-              movimientos.remove(movimiento);
-            });
-          },
-        ),
-      ),
-    );
-  }
-
-  // ----------------------------------------------------------
-  // TARJETA
-  // ----------------------------------------------------------
-
-  Widget tarjeta(
-    String titulo,
-    double monto,
-    IconData icono,
-  ) {
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Row(
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        padding: EdgeInsets.all(16),
+        child: Column(
           children: [
-            Icon(
-              icono,
-              size: 32,
-            ),
-            const SizedBox(width: 14),
+            Text('HISTORIAL DE LOTES', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
             Expanded(
-              child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    titulo,
-                    style:
-                        const TextStyle(fontSize: 14),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'S/ ${monto.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight:
-                          FontWeight.bold,
+              child: historial.isEmpty
+             ? Center(child: Text('No hay lotes guardados'))
+              : ListView.builder(
+                itemCount: historial.length,
+                itemBuilder: (context, index) {
+                  final lote = historial[index];
+                  return Card(
+                    child: ListTile(
+                      title: Text('Lote ${historial.length - index}: ${lote.pollos} Pollos - ${lote.dias} días'),
+                      subtitle: Text('Ganancia: S/ ${lote.ganancia.toStringAsFixed(2)}\nFecha: ${lote.fecha.day}/${lote.fecha.month}/${lote.fecha.year}'),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          setState(() => historial.removeAt(index));
+                          Navigator.pop(context);
+                          verHistorial();
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  );
+                }
               ),
             ),
           ],
@@ -446,319 +167,84 @@ class _InicioPageState extends State<InicioPage> {
     );
   }
 
-  // ----------------------------------------------------------
-  // PANTALLA PRINCIPAL
-  // ----------------------------------------------------------
-
-  @override
-  Widget build(BuildContext context) {
-    final saldoDia =
-        ingresosDia - salidasDia;
-
-    final saldoMes =
-        ingresosMes - salidasMes;
-
-    final ahora = DateTime.now();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'DENALY GROUP',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-      ),
-
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: 5),
-
-              const Text(
-                'Movimiento Económico',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight:
-                      FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 8),
-
-              Text(
-                'Hoy: ${ahora.day}/'
-                '${ahora.month}/'
-                '${ahora.year}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 15,
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              tarjeta(
-                'Ingresos del día',
-                ingresosDia,
-                Icons.arrow_downward,
-              ),
-
-              const SizedBox(height: 10),
-
-              tarjeta(
-                'Salidas del día',
-                salidasDia,
-                Icons.arrow_upward,
-              ),
-
-              const SizedBox(height: 10),
-
-              tarjeta(
-                'Saldo del día',
-                saldoDia,
-                Icons.account_balance_wallet,
-              ),
-
-              const SizedBox(height: 25),
-
-              // RESUMEN MENSUAL
-              Card(
-                elevation: 2,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.all(18),
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment
-                            .start,
-                    children: [
-                      Text(
-                        'RESUMEN DEL MES',
-                        style:
-                            const TextStyle(
-                          fontSize: 18,
-                          fontWeight:
-                              FontWeight.bold,
-                        ),
-                      ),
-
-                      const SizedBox(height: 15),
-
-                      Text(
-                        'Ingresos: '
-                        'S/ ${ingresosMes.toStringAsFixed(2)}',
-                        style:
-                            const TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      Text(
-                        'Salidas: '
-                        'S/ ${salidasMes.toStringAsFixed(2)}',
-                        style:
-                            const TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      Text(
-                        'Saldo mensual: '
-                        'S/ ${saldoMes.toStringAsFixed(2)}',
-                        style:
-                            const TextStyle(
-                          fontSize: 18,
-                          fontWeight:
-                              FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              SizedBox(
-                height: 55,
-                child: ElevatedButton.icon(
-                  onPressed:
-                      mostrarFormulario,
-                  icon:
-                      const Icon(Icons.add),
-                  label: const Text(
-                    'REGISTRAR MOVIMIENTO',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              SizedBox(
-                height: 55,
-                child: OutlinedButton.icon(
-                  onPressed:
-                      mostrarHistorial,
-                  icon: const Icon(
-                    Icons.list_alt,
-                  ),
-                  label: const Text(
-                    'VER HISTORIAL',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight:
-                          FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+  Widget _buildResultado(String titulo, String valor, {Color? color}) {
+    return Card(
+      elevation: 2,
+      margin: EdgeInsets.symmetric(vertical: 4),
+      child: ListTile(
+        title: Text(titulo),
+        trailing: Text(valor, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: color?? Colors.black)),
+      )
     );
   }
-}
-
-// ============================================================
-// PANTALLA HISTORIAL
-// ============================================================
-
-class HistorialPage extends StatefulWidget {
-  final List<Movimiento> movimientos;
-  final Function(Movimiento)
-      eliminarMovimiento;
-
-  const HistorialPage({
-    super.key,
-    required this.movimientos,
-    required this.eliminarMovimiento,
-  });
-
-  @override
-  State<HistorialPage> createState() =>
-      _HistorialPageState();
-}
-
-class _HistorialPageState
-    extends State<HistorialPage> {
 
   @override
   Widget build(BuildContext context) {
-    final lista =
-        [...widget.movimientos];
-
-    lista.sort(
-      (a, b) =>
-          b.fecha.compareTo(a.fecha),
-    );
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Historial de movimientos',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+        title: Text('CALCULADORA POLLOS LA JOYA'),
+        centerTitle: true,
+        actions: [
+          IconButton(icon: Icon(Icons.history), onPressed: verHistorial, tooltip: 'Ver Historial')
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // DATOS
+            Text('DATOS DEL LOTE', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            SizedBox(height: 10),
+            TextField(controller: pollosCtrl, decoration: InputDecoration(labelText: 'Cantidad de Pollos', border: OutlineInputBorder()), keyboardType: TextInputType.number),
+            SizedBox(height: 10),
+            TextField(controller: diasCtrl, decoration: InputDecoration(labelText: 'Días de crianza', border: OutlineInputBorder()), keyboardType: TextInputType.number),
+            SizedBox(height: 10),
+            TextField(controller: consumoCtrl, decoration: InputDecoration(labelText: 'Consumo por pollo kg', border: OutlineInputBorder()), keyboardType: TextInputType.number),
+            SizedBox(height: 10),
+            TextField(controller: precioCtrl, decoration: InputDecoration(labelText: 'Precio venta S/kg', border: OutlineInputBorder()), keyboardType: TextInputType.number),
+            SizedBox(height: 10),
+            TextField(controller: mortalidadCtrl, decoration: InputDecoration(labelText: '% Mortalidad', border: OutlineInputBorder()), keyboardType: TextInputType.number),
+            SizedBox(height: 20),
+
+            // BOTONES
+            Row(
+              children: [
+                Expanded(child: ElevatedButton(onPressed: calcular, child: Text('CALCULAR'))),
+                SizedBox(width: 10),
+                Expanded(child: ElevatedButton(onPressed: guardarLote, child: Text('GUARDAR LOTE'), style: ElevatedButton.styleFrom(backgroundColor: Colors.orange))),
+              ],
+            ),
+            SizedBox(height: 20),
+
+            // RESULTADOS
+            Text('ALIMENTO', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            _buildResultado('Total Kg Alimento', '${totalKg.toStringAsFixed(0)} kg'),
+            _buildResultado('Sacos Inicio 20%', sacosI.toStringAsFixed(0)),
+            _buildResultado('Sacos Crecimiento 35%', sacosC.toStringAsFixed(0)),
+            _buildResultado('Sacos Acabado 45%', sacosA.toStringAsFixed(0)),
+
+            SizedBox(height: 10),
+            Text('INGREDIENTES', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            _buildResultado('Maiz 64%', '${kgMaiz.toStringAsFixed(0)} kg'),
+            _buildResultado('Torta Soya 28%', '${kgSoya.toStringAsFixed(0)} kg'),
+            _buildResultado('Costo Ingredientes', 'S/ ${costoIngred.toStringAsFixed(2)}', color: Colors.red),
+
+            SizedBox(height: 10),
+            Text('RESULTADOS FINALES', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            _buildResultado('Costo Total', 'S/ ${costoTotal.toStringAsFixed(2)}', color: Colors.red),
+            _buildResultado('Ingreso Real', 'S/ ${ingresoReal.toStringAsFixed(2)}', color: Colors.blue),
+            _buildResultado('Ganancia Real', 'S/ ${gananciaReal.toStringAsFixed(2)}', color: Colors.green),
+            _buildResultado('Ganancia x Pollo', 'S/ ${gananciaXPollo.toStringAsFixed(2)}', color: Colors.green),
+
+            SizedBox(height: 10),
+            Text('FLUJO SEMANAL', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+           ...flujoSemanal.map((e) =>
+              _buildResultado('Semana ${e['sem']}', '${e['kg'].toStringAsFixed(0)} kg - S/ ${e['costo'].toStringAsFixed(2)}')
+            ).toList(),
+          ],
         ),
       ),
-
-      body: lista.isEmpty
-          ? const Center(
-              child: Text(
-                'Todavía no hay movimientos',
-                style: TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-            )
-          : ListView.builder(
-              padding:
-                  const EdgeInsets.all(12),
-              itemCount: lista.length,
-              itemBuilder:
-                  (context, index) {
-                final movimiento =
-                    lista[index];
-
-                final esIngreso =
-                    movimiento.tipo ==
-                        'Ingreso';
-
-                return Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      child: Icon(
-                        esIngreso
-                            ? Icons
-                                .arrow_downward
-                            : Icons
-                                .arrow_upward,
-                      ),
-                    ),
-
-                    title: Text(
-                      '${movimiento.tipo} - '
-                      'S/ ${movimiento.monto.toStringAsFixed(2)}',
-                      style:
-                          const TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
-                      ),
-                    ),
-
-                    subtitle: Text(
-                      '${movimiento.categoria}\n'
-                      '${movimiento.descripcion}\n'
-                      'Fecha: '
-                      '${movimiento.fecha.day}/'
-                      '${movimiento.fecha.month}/'
-                      '${movimiento.fecha.year}',
-                    ),
-
-                    isThreeLine: true,
-
-                    trailing: IconButton(
-                      icon: const Icon(
-                        Icons.delete,
-                      ),
-                      onPressed: () {
-                        widget.eliminarMovimiento(
-                            movimiento);
-
-                        setState(() {});
-
-                        ScaffoldMessenger.of(
-                                context)
-                            .showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Movimiento eliminado',
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
     );
   }
 }
