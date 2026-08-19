@@ -24,8 +24,9 @@ jobs:
       with:
         channel: 'stable'
 
-    - name: Generate Android structure
-      run: flutter create . --platforms=android --org com.denaly.calculadora --overwrite
+    - name: Generate Android structure without overwriting lib
+      run: |
+        flutter create --platforms=android --org com.denaly.calculadora .
 
     - name: Install dependencies
       run: flutter pub get
