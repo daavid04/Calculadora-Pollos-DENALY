@@ -34,12 +34,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'DENALY Group - Gestión Avícola',
       theme: ThemeData(
-        primaryColor: Color(0xFF1B5E20),
+        primaryColor: const Color(0xFF1B5E20),
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Color(0xFF1B5E20),
-          secondary: Color(0xFFF9A825),
+          primary: const Color(0xFF1B5E20),
+          secondary: const Color(0xFFF9A825),
         ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           elevation: 0,
           centerTitle: true,
           titleTextStyle: TextStyle(
@@ -50,10 +50,10 @@ class MyApp extends StatelessWidget {
           iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Color(0xFF1B5E20),
         ),
-        cardTheme: CardTheme(
+        cardTheme: const CardThemeData(
           elevation: 4,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.all(Radius.circular(12)),
           ),
         ),
         inputDecorationTheme: InputDecorationTheme(
@@ -65,25 +65,27 @@ class MyApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
         ),
       ),
-      home: MainMenuPage(),
+      home: const MainMenuPage(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class MainMenuPage extends StatelessWidget {
+  const MainMenuPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -93,18 +95,18 @@ class MainMenuPage extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              Spacer(flex: 1),
+              const Spacer(flex: 1),
               Container(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.agriculture,
                       size: 80,
                       color: Colors.white,
                     ),
-                    SizedBox(height: 16),
-                    Text(
+                    const SizedBox(height: 16),
+                    const Text(
                       'DENALY Group',
                       style: TextStyle(
                         fontSize: 36,
@@ -113,7 +115,7 @@ class MainMenuPage extends StatelessWidget {
                         letterSpacing: 1.5,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Gestión Avícola Profesional',
                       style: TextStyle(
                         fontSize: 16,
@@ -124,47 +126,47 @@ class MainMenuPage extends StatelessWidget {
                   ],
                 ),
               ),
-              Spacer(flex: 1),
+              const Spacer(flex: 1),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   children: [
                     _buildMenuButton(
                       context,
                       icon: Icons.calculate,
                       label: 'Nuevo Cálculo',
-                      color: Color(0xFFF9A825),
+                      color: const Color(0xFFF9A825),
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => CalculadoraPage()),
+                        MaterialPageRoute(builder: (_) => const CalculadoraPage()),
                       ),
                     ),
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
                     _buildMenuButton(
                       context,
                       icon: Icons.history,
                       label: 'Historial de Lotes',
                       color: Colors.white,
-                      textColor: Color(0xFF1B5E20),
+                      textColor: const Color(0xFF1B5E20),
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => HistorialPage(),
+                          builder: (_) => const HistorialPage(),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Spacer(flex: 2),
-              Text(
+              const Spacer(flex: 2),
+              const Text(
                 '© 2026 DENALY Group',
                 style: TextStyle(
                   color: Colors.white54,
                   fontSize: 12,
                 ),
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -184,7 +186,7 @@ class MainMenuPage extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(12),
@@ -192,7 +194,7 @@ class MainMenuPage extends StatelessWidget {
               BoxShadow(
                 color: Colors.black26,
                 blurRadius: 8,
-                offset: Offset(0, 4),
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -200,7 +202,7 @@ class MainMenuPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(icon, color: textColor, size: 28),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Text(
                 label,
                 style: TextStyle(
@@ -218,34 +220,40 @@ class MainMenuPage extends StatelessWidget {
 }
 
 class HistorialPage extends StatelessWidget {
+  const HistorialPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Historial de Lotes'),
-        backgroundColor: Color(0xFF1B5E20),
+        title: const Text('Historial de Lotes'),
+        backgroundColor: const Color(0xFF1B5E20),
         foregroundColor: Colors.white,
       ),
-      body: ConsumerHistorial(),
+      body: const ConsumerHistorial(),
     );
   }
 }
 
 class ConsumerHistorial extends StatefulWidget {
+  const ConsumerHistorial({super.key});
+
   @override
   _ConsumerHistorialState createState() => _ConsumerHistorialState();
 }
 
 class _ConsumerHistorialState extends State<ConsumerHistorial> {
+  // Acceso directo al historial global
+  List<Lote> get historial => CalculadoraPage.historialGlobal;
+
   @override
   Widget build(BuildContext context) {
-    final historial = CalculadoraPageState.historialGlobal;
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFFF5F5F5), Colors.white],
+          colors: [Colors.grey[50]!, Colors.white],
         ),
       ),
       child: historial.isEmpty
@@ -254,7 +262,7 @@ class _ConsumerHistorialState extends State<ConsumerHistorial> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.history, size: 80, color: Colors.grey[400]),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
                     'No hay lotes guardados',
                     style: TextStyle(
@@ -262,7 +270,7 @@ class _ConsumerHistorialState extends State<ConsumerHistorial> {
                       color: Colors.grey[600],
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     'Realiza un cálculo y guarda el lote',
                     style: TextStyle(
@@ -273,13 +281,13 @@ class _ConsumerHistorialState extends State<ConsumerHistorial> {
               ),
             )
           : ListView.builder(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               itemCount: historial.length,
               itemBuilder: (context, index) {
                 final lote = historial[index];
                 return Card(
                   elevation: 4,
-                  margin: EdgeInsets.only(bottom: 12),
+                  margin: const EdgeInsets.only(bottom: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -289,20 +297,20 @@ class _ConsumerHistorialState extends State<ConsumerHistorial> {
                       border: Border(
                         left: BorderSide(
                           color: lote.ganancia > 0
-                              ? Color(0xFF4CAF50)
-                              : Color(0xFFE53935),
+                              ? const Color(0xFF4CAF50)
+                              : const Color(0xFFE53935),
                           width: 6,
                         ),
                       ),
                     ),
                     child: ListTile(
-                      contentPadding: EdgeInsets.all(16),
+                      contentPadding: const EdgeInsets.all(16),
                       title: Row(
                         children: [
                           Expanded(
                             child: Text(
                               'Lote ${historial.length - index}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Color(0xFF1B5E20),
@@ -310,14 +318,14 @@ class _ConsumerHistorialState extends State<ConsumerHistorial> {
                             ),
                           ),
                           Container(
-                            padding: EdgeInsets.symmetric(
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 12,
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
                               color: lote.ganancia > 0
-                                  ? Color(0xFFE8F5E9)
-                                  : Color(0xFFFFEBEE),
+                                  ? const Color(0xFFE8F5E9)
+                                  : const Color(0xFFFFEBEE),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Text(
@@ -325,8 +333,8 @@ class _ConsumerHistorialState extends State<ConsumerHistorial> {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: lote.ganancia > 0
-                                    ? Color(0xFF2E7D32)
-                                    : Color(0xFFC62828),
+                                    ? const Color(0xFF2E7D32)
+                                    : const Color(0xFFC62828),
                               ),
                             ),
                           ),
@@ -335,48 +343,54 @@ class _ConsumerHistorialState extends State<ConsumerHistorial> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Row(
                             children: [
                               Icon(Icons.pets, size: 16, color: Colors.grey[600]),
-                              SizedBox(width: 4),
+                              const SizedBox(width: 4),
                               Text('${lote.pollos} pollos'),
-                              SizedBox(width: 16),
+                              const SizedBox(width: 16),
                               Icon(Icons.calendar_today, size: 16,
                                   color: Colors.grey[600]),
-                              SizedBox(width: 4),
-                              Text(
-                                  '${lote.dias} días'),
-                              SizedBox(width: 16),
+                              const SizedBox(width: 4),
+                              Text('${lote.dias} días'),
+                              const SizedBox(width: 16),
                               Icon(Icons.monetization_on, size: 16,
                                   color: Colors.grey[600]),
-                              SizedBox(width: 4),
+                              const SizedBox(width: 4),
                               Text('S/ ${lote.precio}/kg'),
                             ],
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Row(
                             children: [
                               Icon(Icons.trending_up, size: 16,
                                   color: Colors.grey[600]),
-                              SizedBox(width: 4),
+                              const SizedBox(width: 4),
                               Text('Ganancia x pollo: S/ ${lote.gananciaXPollo.toStringAsFixed(2)}'),
-                              SizedBox(width: 16),
+                              const SizedBox(width: 16),
                               Icon(Icons.warning, size: 16,
                                   color: Colors.grey[600]),
-                              SizedBox(width: 4),
+                              const SizedBox(width: 4),
                               Text('Mortalidad: ${lote.mortalidad}%'),
                             ],
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Row(
                             children: [
                               Icon(Icons.date_range, size: 16,
                                   color: Colors.grey[600]),
-                              SizedBox(width: 4),
-                              Text(
-                                  '${lote.fecha.day}/${lote.fecha.month}/${lote.fecha.year}'),
+                              const SizedBox(width: 4),
+                              Text('${lote.fecha.day}/${lote.fecha.month}/${lote.fecha.year}'),
                             ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Costo BB: S/ ${lote.costoPollitoBB.toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
                           ),
                         ],
                       ),
@@ -387,7 +401,7 @@ class _ConsumerHistorialState extends State<ConsumerHistorial> {
                             historial.removeAt(index);
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
+                            const SnackBar(
                               content: Text('Lote eliminado'),
                               backgroundColor: Colors.red,
                               duration: Duration(seconds: 1),
@@ -405,13 +419,14 @@ class _ConsumerHistorialState extends State<ConsumerHistorial> {
 }
 
 class CalculadoraPage extends StatefulWidget {
+  static List<Lote> historialGlobal = [];
+  const CalculadoraPage({super.key});
+
   @override
   _CalculadoraPageState createState() => _CalculadoraPageState();
 }
 
 class _CalculadoraPageState extends State<CalculadoraPage> {
-  static List<Lote> historialGlobal = [];
-
   // Controladores
   final pollosCtrl = TextEditingController(text: '800');
   final diasCtrl = TextEditingController(text: '42');
@@ -441,7 +456,6 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
   void calcular() {
     setState(() {
       double pollos = double.parse(pollosCtrl.text);
-      double dias = double.parse(diasCtrl.text);
       double consumo = double.parse(consumoCtrl.text);
       double precio = double.parse(precioCtrl.text);
       double mort = double.parse(mortalidadCtrl.text) / 100;
@@ -491,13 +505,11 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
       gananciaXPollo = pollosVivos > 0 ? gananciaReal / pollosVivos : 0;
 
       // Flujo semanal mejorado
-      // Distribución porcentual del consumo por semana (aproximada)
       List<double> distribucion = [0.03, 0.07, 0.15, 0.25, 0.30, 0.20];
       flujoSemanal = [];
       for (int i = 0; i < distribucion.length; i++) {
         double kgSemana = totalKg * distribucion[i];
         double costoAlimSemana = kgSemana * 2.87;
-        // Gasto en pollitos BB distribuido en las primeras semanas
         double costoBBProporcional = (i < 2) ? costoPollitosBB / 2 : 0;
         double otrosProporcionales = (i == 0) ? 500 : 0;
         double totalSemana = costoAlimSemana + costoBBProporcional +
@@ -517,7 +529,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
   void guardarLote() {
     calcular();
     setState(() {
-      historialGlobal.add(Lote(
+      CalculadoraPage.historialGlobal.add(Lote(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         pollos: int.parse(pollosCtrl.text),
         dias: int.parse(diasCtrl.text),
@@ -531,7 +543,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
       ));
     });
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('Lote guardado con éxito ✅'),
         backgroundColor: Color(0xFF4CAF50),
         duration: Duration(seconds: 2),
@@ -542,10 +554,10 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
   Widget _buildResultado(String titulo, String valor, {Color? color}) {
     return Card(
       elevation: 2,
-      margin: EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -558,7 +570,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
-                color: color ?? Color(0xFF1B5E20),
+                color: color ?? const Color(0xFF1B5E20),
               ),
             ),
           ],
@@ -579,7 +591,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
         ),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
       keyboardType: TextInputType.number,
     );
@@ -589,12 +601,12 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nuevo Cálculo'),
-        backgroundColor: Color(0xFF1B5E20),
+        title: const Text('Nuevo Cálculo'),
+        backgroundColor: const Color(0xFF1B5E20),
         foregroundColor: Colors.white,
         actions: [
           IconButton(
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
             onPressed: guardarLote,
             tooltip: 'Guardar Lote',
           ),
@@ -605,11 +617,11 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFFF5F5F5), Colors.white],
+            colors: [Colors.grey[50]!, Colors.white],
           ),
         ),
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -622,7 +634,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                     BoxShadow(
                       color: Colors.grey[200]!,
                       blurRadius: 8,
-                      offset: Offset(0, 2),
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
@@ -634,7 +646,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
 
               // Contenido según tab
               if (_selectedTab == 0) _buildDatosTab(),
@@ -653,9 +665,9 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
       child: InkWell(
         onTap: () => setState(() => _selectedTab = index),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 14),
+          padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: isActive ? Color(0xFF1B5E20) : Colors.transparent,
+            color: isActive ? const Color(0xFF1B5E20) : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Center(
@@ -681,11 +693,11 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
           elevation: 2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'DATOS DE PRODUCCIÓN',
                   style: TextStyle(
                     fontSize: 16,
@@ -693,34 +705,34 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                     color: Color(0xFF1B5E20),
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 _buildInputField(pollosCtrl, 'Cantidad de Pollos', 'Ej: 800'),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildInputField(diasCtrl, 'Días de Crianza', 'Ej: 42'),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildInputField(consumoCtrl, 'Consumo por Pollo (kg)',
                     'Ej: 4.5'),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildInputField(precioCtrl, 'Precio de Venta (S/ kg)',
                     'Ej: 11.0'),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildInputField(mortalidadCtrl, 'Porcentaje de Mortalidad',
                     'Ej: 5.0'),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildInputField(costoBBController, 'Costo Pollito BB (S/)',
                     'Ej: 3.5'),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildInputField(pesoMuertoController, 'Peso Pollo Muerto (kg)',
                     'Ej: 2.8'),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: calcular,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFF9A825),
+                    backgroundColor: const Color(0xFFF9A825),
                     foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: Text(
+                  child: const Text(
                     'CALCULAR',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
@@ -741,11 +753,11 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
           elevation: 2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'ALIMENTO',
                   style: TextStyle(
                     fontSize: 16,
@@ -753,28 +765,28 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                     color: Color(0xFF1B5E20),
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildResultado('Total Kg Alimento', '${totalKg.toStringAsFixed(0)} kg'),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 _buildResultado('Sacos Inicio 20%', sacosI.toStringAsFixed(0)),
                 _buildResultado('Sacos Crecimiento 35%', sacosC.toStringAsFixed(0)),
                 _buildResultado('Sacos Acabado 45%', sacosA.toStringAsFixed(0)),
                 _buildResultado('Total Sacos', sacosT.toStringAsFixed(0),
-                    color: Color(0xFFF9A825)),
+                    color: const Color(0xFFF9A825)),
               ],
             ),
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Card(
           elevation: 2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'INGREDIENTES',
                   style: TextStyle(
                     fontSize: 16,
@@ -782,15 +794,15 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                     color: Color(0xFF1B5E20),
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildResultado('Maíz 64%', '${kgMaiz.toStringAsFixed(0)} kg'),
                 _buildResultado('Torta de Soya 28%', '${kgSoya.toStringAsFixed(0)} kg'),
                 _buildResultado('Aceite 0.9%', '${kgAceite.toStringAsFixed(0)} kg'),
                 _buildResultado('Núcleo 5%', '${kgNucleo.toStringAsFixed(0)} kg'),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 _buildResultado(
                     'Costo Ingredientes', 'S/ ${costoIngred.toStringAsFixed(2)}',
-                    color: Color(0xFFE53935)),
+                    color: const Color(0xFFE53935)),
               ],
             ),
           ),
@@ -807,11 +819,11 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
           elevation: 2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'RESULTADOS FINANCIEROS',
                   style: TextStyle(
                     fontSize: 16,
@@ -819,7 +831,7 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                     color: Color(0xFF1B5E20),
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 _buildResultado('Costo Alimento', 'S/ ${costoAlimento.toStringAsFixed(2)}',
                     color: Colors.blue),
                 _buildResultado('Costo Pollitos BB', 'S/ ${costoPollitosBB.toStringAsFixed(2)}',
@@ -827,35 +839,35 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                 _buildResultado('Costo Otros', 'S/ ${costoOtros.toStringAsFixed(2)}',
                     color: Colors.blue),
                 _buildResultado('Costo Total', 'S/ ${costoTotal.toStringAsFixed(2)}',
-                    color: Color(0xFFE53935)),
-                SizedBox(height: 8),
-                Divider(),
+                    color: const Color(0xFFE53935)),
+                const SizedBox(height: 8),
+                const Divider(),
                 _buildResultado('Ingreso por Vivos', 'S/ ${(pollosVivos * 3 * double.parse(precioCtrl.text)).toStringAsFixed(2)}',
-                    color: Color(0xFF2E7D32)),
+                    color: const Color(0xFF2E7D32)),
                 _buildResultado('Ingreso por Muertos', 'S/ ${((double.parse(mortalidadCtrl.text)/100 * double.parse(pollosCtrl.text)) * double.parse(pesoMuertoController.text) * double.parse(precioCtrl.text)).toStringAsFixed(2)}',
-                    color: Color(0xFF2E7D32)),
+                    color: const Color(0xFF2E7D32)),
                 _buildResultado('Ingreso Total', 'S/ ${ingresoReal.toStringAsFixed(2)}',
-                    color: Color(0xFF2E7D32)),
-                SizedBox(height: 8),
-                Divider(),
+                    color: const Color(0xFF2E7D32)),
+                const SizedBox(height: 8),
+                const Divider(),
                 _buildResultado('Ganancia Real', 'S/ ${gananciaReal.toStringAsFixed(2)}',
-                    color: gananciaReal >= 0 ? Color(0xFF4CAF50) : Color(0xFFE53935)),
+                    color: gananciaReal >= 0 ? const Color(0xFF4CAF50) : const Color(0xFFE53935)),
                 _buildResultado('Ganancia x Pollo', 'S/ ${gananciaXPollo.toStringAsFixed(2)}',
-                    color: gananciaXPollo >= 0 ? Color(0xFF4CAF50) : Color(0xFFE53935)),
+                    color: gananciaXPollo >= 0 ? const Color(0xFF4CAF50) : const Color(0xFFE53935)),
               ],
             ),
           ),
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         Card(
           elevation: 2,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
-            padding: EdgeInsets.all(16),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'FLUJO SEMANAL',
                   style: TextStyle(
                     fontSize: 16,
@@ -863,37 +875,37 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
                     color: Color(0xFF1B5E20),
                   ),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
+                    const Expanded(
                       flex: 2,
                       child: Text('Semana', style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.grey[600])),
+                          fontWeight: FontWeight.bold, color: Colors.grey)),
                     ),
-                    Expanded(
+                    const Expanded(
                       flex: 3,
                       child: Text('Alimento (kg)', style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.grey[600])),
+                          fontWeight: FontWeight.bold, color: Colors.grey)),
                     ),
-                    Expanded(
+                    const Expanded(
                       flex: 4,
                       child: Text('Costo (S/)', style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.grey[600])),
+                          fontWeight: FontWeight.bold, color: Colors.grey)),
                     ),
                   ],
                 ),
-                Divider(),
+                const Divider(),
                 ...flujoSemanal.map((e) => Padding(
-                      padding: EdgeInsets.symmetric(vertical: 4),
+                      padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Expanded(
                             flex: 2,
                             child: Text('${e['sem']}',
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xFF1B5E20))),
                           ),
@@ -913,11 +925,11 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
             ),
           ),
         ),
-        SizedBox(height: 12),
-        Text(
+        const SizedBox(height: 12),
+        const Text(
           'Los datos se guardan automáticamente en el historial',
           style: TextStyle(
-            color: Colors.grey[600],
+            color: Colors.grey,
             fontSize: 12,
             fontStyle: FontStyle.italic,
           ),
