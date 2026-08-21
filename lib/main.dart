@@ -16,7 +16,7 @@ class Lote {
   final double gananciaXPollo;
   final DateTime fecha;
 
-  Lote({
+  const Lote({
     required this.id,
     required this.pollos,
     required this.mortalidad,
@@ -46,10 +46,10 @@ class CalculadoraPollosApp extends StatelessWidget {
           foregroundColor: Colors.white,
           centerTitle: true,
         ),
-        cardTheme: CardTheme(
+        cardTheme: const CardThemeData(
           elevation: 3,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
         ),
       ),
@@ -70,10 +70,10 @@ class MenuPrincipal extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              const Color(0xFF1E5631),
-              const Color(0xFF2E7D32),
-              const Color(0xFF4CAF50),
+            colors: const [
+              Color(0xFF1E5631),
+              Color(0xFF2E7D32),
+              Color(0xFF4CAF50),
             ],
           ),
         ),
@@ -157,11 +157,11 @@ class MenuPrincipal extends StatelessWidget {
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black26,
                 blurRadius: 8,
-                offset: const Offset(0, 4),
+                offset: Offset(0, 4),
               ),
             ],
           ),
@@ -218,7 +218,7 @@ class _CalculadoraScreenState extends State<CalculadoraScreen>
   late TabController _tabController;
 
   // Consumo por ave (kg) corregido: pico en semana 5
-  final List<double> _consumoPorAve = [
+  final List<double> _consumoPorAve = const [
     0.18, // Semana 1
     0.42, // Semana 2
     0.90, // Semana 3
