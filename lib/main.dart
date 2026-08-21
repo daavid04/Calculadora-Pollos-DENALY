@@ -1,172 +1,137 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(const CalculadoraPollosApp());
+}
 
+// Modelo de Lote para historial
 class Lote {
-  String id;
-  int pollos;
-  int dias;
-  double consumo;
-  double precio;
-  double mortalidad;
-  double ganancia;
-  double gananciaXPollo;
-  DateTime fecha;
-  double costoPollitoBB;
+  final String id;
+  final int pollos;
+  final double mortalidad; // en porcentaje
+  final double precioVenta;
+  final double precioAlimento;
+  final double costoPollito;
+  final double ganancia;
+  final double gananciaXPollo;
+  final DateTime fecha;
 
   Lote({
     required this.id,
     required this.pollos,
-    required this.dias,
-    required this.consumo,
-    required this.precio,
     required this.mortalidad,
+    required this.precioVenta,
+    required this.precioAlimento,
+    required this.costoPollito,
     required this.ganancia,
     required this.gananciaXPollo,
     required this.fecha,
-    required this.costoPollitoBB,
   });
 }
 
-class MyApp extends StatelessWidget {
+// App principal
+class CalculadoraPollosApp extends StatelessWidget {
+  const CalculadoraPollosApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'DENALY Group - Gestión Avícola',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: const Color(0xFF1B5E20),
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: const Color(0xFF1B5E20),
-          secondary: const Color(0xFFF9A825),
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1E5631)),
+        useMaterial3: true,
         appBarTheme: const AppBarTheme(
-          elevation: 0,
+          backgroundColor: Color(0xFF1E5631),
+          foregroundColor: Colors.white,
           centerTitle: true,
-          titleTextStyle: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-          iconTheme: IconThemeData(color: Colors.white),
-          backgroundColor: Color(0xFF1B5E20),
         ),
-        cardTheme: const CardThemeData(
-          elevation: 4,
+        cardTheme: CardTheme(
+          elevation: 3,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12)),
-          ),
-        ),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          filled: true,
-          fillColor: Colors.grey[50],
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
       ),
-      home: const MainMenuPage(),
-      debugShowCheckedModeBanner: false,
+      home: const MenuPrincipal(),
     );
   }
 }
 
-class MainMenuPage extends StatelessWidget {
-  const MainMenuPage({super.key});
+// Menú principal con logo de pollo
+class MenuPrincipal extends StatelessWidget {
+  const MenuPrincipal({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF1B5E20), Color(0xFF2E7D32), Color(0xFF4CAF50)],
+            colors: [
+              const Color(0xFF1E5631),
+              const Color(0xFF2E7D32),
+              const Color(0xFF4CAF50),
+            ],
           ),
         ),
         child: SafeArea(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(flex: 1),
-              Container(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    const Icon(
-                      Icons.agriculture,
-                      size: 80,
-                      color: Colors.white,
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'DENALY Group',
-                      style: TextStyle(
-                        fontSize: 36,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                    const Text(
-                      'Gestión Avícola Profesional',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                        letterSpacing: 2,
-                      ),
-                    ),
-                  ],
+              // Logo: emoji de pollo
+              const Text(
+                '🐔',
+                style: TextStyle(fontSize: 80),
+              ),
+              const SizedBox(height: 16),
+              const Text(
+                'DENALY Group',
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  letterSpacing: 1.5,
                 ),
               ),
-              const Spacer(flex: 1),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  children: [
-                    _buildMenuButton(
-                      context,
-                      icon: Icons.calculate,
-                      label: 'Nuevo Cálculo',
-                      color: const Color(0xFFF9A825),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const CalculadoraPage()),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildMenuButton(
-                      context,
-                      icon: Icons.history,
-                      label: 'Historial de Lotes',
-                      color: Colors.white,
-                      textColor: const Color(0xFF1B5E20),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const HistorialPage(),
-                        ),
-                      ),
-                    ),
-                  ],
+              const Text(
+                'Gestión Avícola Profesional',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white70,
                 ),
               ),
-              const Spacer(flex: 2),
+              const SizedBox(height: 48),
+              // Botones de navegación
+              _buildMenuButton(
+                context,
+                icon: Icons.calculate,
+                label: 'Nueva Simulación',
+                color: const Color(0xFFF9A825),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CalculadoraScreen()),
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildMenuButton(
+                context,
+                icon: Icons.history,
+                label: 'Historial de Lotes',
+                color: Colors.white,
+                textColor: const Color(0xFF1E5631),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const HistorialScreen()),
+                ),
+              ),
+              const SizedBox(height: 40),
               const Text(
                 '© 2026 DENALY Group',
-                style: TextStyle(
-                  color: Colors.white54,
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: Colors.white54, fontSize: 12),
               ),
-              const SizedBox(height: 24),
             ],
           ),
         ),
@@ -174,19 +139,21 @@ class MainMenuPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuButton(BuildContext context,
-      {required IconData icon,
-      required String label,
-      required Color color,
-      Color textColor = Colors.white,
-      required VoidCallback onTap}) {
+  Widget _buildMenuButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required Color color,
+    Color textColor = Colors.white,
+    required VoidCallback onTap,
+  }) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(12),
@@ -199,7 +166,7 @@ class MainMenuPage extends StatelessWidget {
             ],
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, color: textColor, size: 28),
               const SizedBox(width: 16),
@@ -219,358 +186,188 @@ class MainMenuPage extends StatelessWidget {
   }
 }
 
-class HistorialPage extends StatelessWidget {
-  const HistorialPage({super.key});
+// Pantalla principal de cálculo
+class CalculadoraScreen extends StatefulWidget {
+  const CalculadoraScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Historial de Lotes'),
-        backgroundColor: const Color(0xFF1B5E20),
-        foregroundColor: Colors.white,
-      ),
-      body: const ConsumerHistorial(),
-    );
-  }
+  State<CalculadoraScreen> createState() => _CalculadoraScreenState();
 }
 
-class ConsumerHistorial extends StatefulWidget {
-  const ConsumerHistorial({super.key});
-
-  @override
-  _ConsumerHistorialState createState() => _ConsumerHistorialState();
-}
-
-class _ConsumerHistorialState extends State<ConsumerHistorial> {
-  // Acceso directo al historial global
-  List<Lote> get historial => CalculadoraPage.historialGlobal;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Colors.grey[50]!, Colors.white],
-        ),
-      ),
-      child: historial.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.history, size: 80, color: Colors.grey[400]),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No hay lotes guardados',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Realiza un cálculo y guarda el lote',
-                    style: TextStyle(
-                      color: Colors.grey[500],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: historial.length,
-              itemBuilder: (context, index) {
-                final lote = historial[index];
-                return Card(
-                  elevation: 4,
-                  margin: const EdgeInsets.only(bottom: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border(
-                        left: BorderSide(
-                          color: lote.ganancia > 0
-                              ? const Color(0xFF4CAF50)
-                              : const Color(0xFFE53935),
-                          width: 6,
-                        ),
-                      ),
-                    ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16),
-                      title: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Lote ${historial.length - index}',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF1B5E20),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: lote.ganancia > 0
-                                  ? const Color(0xFFE8F5E9)
-                                  : const Color(0xFFFFEBEE),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              'S/ ${lote.ganancia.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: lote.ganancia > 0
-                                    ? const Color(0xFF2E7D32)
-                                    : const Color(0xFFC62828),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(Icons.pets, size: 16, color: Colors.grey[600]),
-                              const SizedBox(width: 4),
-                              Text('${lote.pollos} pollos'),
-                              const SizedBox(width: 16),
-                              Icon(Icons.calendar_today, size: 16,
-                                  color: Colors.grey[600]),
-                              const SizedBox(width: 4),
-                              Text('${lote.dias} días'),
-                              const SizedBox(width: 16),
-                              Icon(Icons.monetization_on, size: 16,
-                                  color: Colors.grey[600]),
-                              const SizedBox(width: 4),
-                              Text('S/ ${lote.precio}/kg'),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(Icons.trending_up, size: 16,
-                                  color: Colors.grey[600]),
-                              const SizedBox(width: 4),
-                              Text('Ganancia x pollo: S/ ${lote.gananciaXPollo.toStringAsFixed(2)}'),
-                              const SizedBox(width: 16),
-                              Icon(Icons.warning, size: 16,
-                                  color: Colors.grey[600]),
-                              const SizedBox(width: 4),
-                              Text('Mortalidad: ${lote.mortalidad}%'),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(Icons.date_range, size: 16,
-                                  color: Colors.grey[600]),
-                              const SizedBox(width: 4),
-                              Text('${lote.fecha.day}/${lote.fecha.month}/${lote.fecha.year}'),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Costo BB: S/ ${lote.costoPollitoBB.toStringAsFixed(2)}',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
-                      ),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red[300]),
-                        onPressed: () {
-                          setState(() {
-                            historial.removeAt(index);
-                          });
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Lote eliminado'),
-                              backgroundColor: Colors.red,
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-    );
-  }
-}
-
-class CalculadoraPage extends StatefulWidget {
-  static List<Lote> historialGlobal = [];
-  const CalculadoraPage({super.key});
-
-  @override
-  _CalculadoraPageState createState() => _CalculadoraPageState();
-}
-
-class _CalculadoraPageState extends State<CalculadoraPage> {
-  // Controladores
-  final pollosCtrl = TextEditingController(text: '800');
-  final diasCtrl = TextEditingController(text: '42');
-  final consumoCtrl = TextEditingController(text: '4.5');
-  final precioCtrl = TextEditingController(text: '11');
-  final mortalidadCtrl = TextEditingController(text: '5');
-  final costoBBController = TextEditingController(text: '3.5');
-  final pesoMuertoController = TextEditingController(text: '2.8');
+class _CalculadoraScreenState extends State<CalculadoraScreen>
+    with SingleTickerProviderStateMixin {
+  // Controladores de entrada
+  final TextEditingController _pollosController = TextEditingController(text: '600');
+  final TextEditingController _precioVentaController = TextEditingController(text: '11.0');
+  final TextEditingController _precioAlimentoController = TextEditingController(text: '2.87');
+  final TextEditingController _costoPollitoController = TextEditingController(text: '3.5');
+  final TextEditingController _mortalidadController = TextEditingController(text: '5');
+  String _mortalidadTipo = '%'; // '%' o 'cantidad'
+  final TextEditingController _otrosCostosController = TextEditingController(text: '700');
 
   // Resultados
-  double totalKg = 0,
-      costoAlimento = 0,
-      costoPollitosBB = 0,
-      costoOtros = 0,
-      costoTotal = 0,
-      gananciaReal = 0,
-      gananciaXPollo = 0,
-      ingresoReal = 0;
-  double sacosI = 0, sacosC = 0, sacosA = 0, sacosT = 0;
-  double kgMaiz = 0, kgSoya = 0, kgAceite = 0, kgNucleo = 0, costoIngred = 0;
-  double pollosVivos = 0;
-  List<Map<String, dynamic>> flujoSemanal = [];
+  double _totalKg = 0;
+  double _sacosInicio = 0, _sacosCrec = 0, _sacosAcab = 0, _sacosTotal = 0;
+  double _costoAlimento = 0, _costoPollitos = 0, _costoOtros = 0, _costoTotal = 0;
+  double _pollosVivos = 0, _pollosMuertos = 0;
+  double _ingresoReal = 0, _gananciaReal = 0, _gananciaXPollo = 0;
+  List<Map<String, dynamic>> _flujoSemanal = [];
 
-  // Estado de visualización
+  // Tab index
   int _selectedTab = 0;
+  late TabController _tabController;
 
-  void calcular() {
+  // Consumo por ave (kg) corregido: pico en semana 5
+  final List<double> _consumoPorAve = [
+    0.18, // Semana 1
+    0.42, // Semana 2
+    0.90, // Semana 3
+    1.50, // Semana 4
+    2.10, // Semana 5 (pico)
+    1.80, // Semana 6
+  ];
+
+  // Historial estático
+  static final List<Lote> _historial = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _calcular(); // cálculo inicial
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  // Función principal de cálculo
+  void _calcular() {
     setState(() {
-      double pollos = double.parse(pollosCtrl.text);
-      double consumo = double.parse(consumoCtrl.text);
-      double precio = double.parse(precioCtrl.text);
-      double mort = double.parse(mortalidadCtrl.text) / 100;
-      double costoBB = double.parse(costoBBController.text);
-      double pesoMuerto = double.parse(pesoMuertoController.text);
+      int pollos = int.tryParse(_pollosController.text) ?? 0;
+      double precioVenta = double.tryParse(_precioVentaController.text) ?? 0.0;
+      double precioAlimento = double.tryParse(_precioAlimentoController.text) ?? 0.0;
+      double costoPollito = double.tryParse(_costoPollitoController.text) ?? 0.0;
+      double mortalidadValor = double.tryParse(_mortalidadController.text) ?? 0.0;
+      double otros = double.tryParse(_otrosCostosController.text) ?? 0.0;
 
-      // Cálculo de alimento
-      totalKg = pollos * consumo;
+      // Cálculo de pollos muertos según tipo
+      double pollosMuertos = 0;
+      if (_mortalidadTipo == '%') {
+        pollosMuertos = pollos * (mortalidadValor / 100);
+      } else {
+        pollosMuertos = mortalidadValor.clamp(0.0, pollos.toDouble());
+      }
+      _pollosMuertos = pollosMuertos;
+      _pollosVivos = pollos - pollosMuertos;
 
-      // Sacos por etapa
-      sacosI = (totalKg * 0.20 / 50).ceilToDouble();
-      sacosC = (totalKg * 0.35 / 50).ceilToDouble();
-      sacosA = (totalKg * 0.45 / 50).ceilToDouble();
-      sacosT = sacosI + sacosC + sacosA;
+      // Alimento total: suma de consumos semanales * pollos
+      double totalKg = _consumoPorAve.reduce((a, b) => a + b) * pollos;
+      _totalKg = totalKg;
 
-      // Ingredientes
-      kgMaiz = totalKg * 0.64;
-      double sMaiz = (kgMaiz / 50).ceilToDouble();
-      kgSoya = totalKg * 0.28;
-      double sSoya = (kgSoya / 50).ceilToDouble();
-      kgAceite = totalKg * 0.009;
-      double sAceite = (kgAceite / 50).ceilToDouble();
-      kgNucleo = totalKg * 0.05;
-      double sNucleo = (kgNucleo / 50).ceilToDouble();
-      costoIngred = (sMaiz * 110) + (sSoya * 165) + (sAceite * 280) +
-          (sNucleo * 220);
+      // Sacos por etapa (20%, 35%, 45%)
+      _sacosInicio = (totalKg * 0.20 / 50).ceilToDouble();
+      _sacosCrec = (totalKg * 0.35 / 50).ceilToDouble();
+      _sacosAcab = (totalKg * 0.45 / 50).ceilToDouble();
+      _sacosTotal = _sacosInicio + _sacosCrec + _sacosAcab;
 
       // Costos
-      costoAlimento = totalKg * 2.87;
-      costoPollitosBB = pollos * costoBB;
-      costoOtros = 700;
-      costoTotal = costoAlimento + costoPollitosBB + costoOtros;
+      _costoAlimento = totalKg * precioAlimento;
+      _costoPollitos = pollos * costoPollito;
+      _costoOtros = otros;
+      _costoTotal = _costoAlimento + _costoPollitos + _costoOtros;
 
-      // Mortalidad y peso
-      double pollosMuertos = pollos * mort;
-      pollosVivos = pollos - pollosMuertos;
-      double pesoVivoTotal = pollosVivos * 3; // Peso promedio 3kg
-      double pesoMuertoTotal = pollosMuertos * pesoMuerto;
-
-      // Ingresos
-      double ingresoVivos = pesoVivoTotal * precio;
-      double ingresoMuertos = pesoMuertoTotal * precio;
-      ingresoReal = ingresoVivos + ingresoMuertos;
+      // Ingresos: pollos vivos * 3kg * precioVenta
+      double pesoVivoTotal = _pollosVivos * 3.0;
+      _ingresoReal = pesoVivoTotal * precioVenta;
 
       // Ganancias
-      gananciaReal = ingresoReal - costoTotal;
-      gananciaXPollo = pollosVivos > 0 ? gananciaReal / pollosVivos : 0;
+      _gananciaReal = _ingresoReal - _costoTotal;
+      _gananciaXPollo = _pollosVivos > 0 ? _gananciaReal / _pollosVivos : 0;
 
-      // Flujo semanal mejorado
-      List<double> distribucion = [0.03, 0.07, 0.15, 0.25, 0.30, 0.20];
-      flujoSemanal = [];
-      for (int i = 0; i < distribucion.length; i++) {
-        double kgSemana = totalKg * distribucion[i];
-        double costoAlimSemana = kgSemana * 2.87;
-        double costoBBProporcional = (i < 2) ? costoPollitosBB / 2 : 0;
-        double otrosProporcionales = (i == 0) ? 500 : 0;
-        double totalSemana = costoAlimSemana + costoBBProporcional +
-            otrosProporcionales;
-
-        flujoSemanal.add({
-          'sem': i + 1,
+      // Flujo semanal (kg y costo por semana)
+      _flujoSemanal = [];
+      for (int i = 0; i < _consumoPorAve.length; i++) {
+        double kgSemana = _consumoPorAve[i] * pollos;
+        double costoSemana = kgSemana * precioAlimento;
+        _flujoSemanal.add({
+          'semana': i + 1,
           'kg': kgSemana,
-          'costoAlimento': costoAlimSemana,
-          'costoTotal': totalSemana,
-          'porcentaje': distribucion[i] * 100,
+          'costo': costoSemana,
         });
       }
     });
   }
 
-  void guardarLote() {
-    calcular();
+  // Guardar lote en historial
+  void _guardarLote() {
+    _calcular();
+    final lote = Lote(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      pollos: int.tryParse(_pollosController.text) ?? 0,
+      mortalidad: _mortalidadTipo == '%'
+          ? double.tryParse(_mortalidadController.text) ?? 0.0
+          : ((double.tryParse(_mortalidadController.text) ?? 0) /
+              (int.tryParse(_pollosController.text) ?? 1) *
+              100),
+      precioVenta: double.tryParse(_precioVentaController.text) ?? 0.0,
+      precioAlimento: double.tryParse(_precioAlimentoController.text) ?? 0.0,
+      costoPollito: double.tryParse(_costoPollitoController.text) ?? 0.0,
+      ganancia: _gananciaReal,
+      gananciaXPollo: _gananciaXPollo,
+      fecha: DateTime.now(),
+    );
     setState(() {
-      CalculadoraPage.historialGlobal.add(Lote(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        pollos: int.parse(pollosCtrl.text),
-        dias: int.parse(diasCtrl.text),
-        consumo: double.parse(consumoCtrl.text),
-        precio: double.parse(precioCtrl.text),
-        mortalidad: double.parse(mortalidadCtrl.text),
-        ganancia: gananciaReal,
-        gananciaXPollo: gananciaXPollo,
-        fecha: DateTime.now(),
-        costoPollitoBB: double.parse(costoBBController.text),
-      ));
+      _historial.add(lote);
     });
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Lote guardado con éxito ✅'),
         backgroundColor: Color(0xFF4CAF50),
-        duration: Duration(seconds: 2),
       ),
     );
   }
 
-  Widget _buildResultado(String titulo, String valor, {Color? color}) {
+  // Widget de entrada con ícono
+  Widget _buildInputField(
+    TextEditingController controller,
+    String label,
+    String hint,
+    IconData icon, {
+    Widget? suffix,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        border: const OutlineInputBorder(),
+        prefixIcon: Icon(icon, color: const Color(0xFF1E5631)),
+        suffix: suffix,
+      ),
+      onChanged: (_) => _calcular(),
+    );
+  }
+
+  // Widget resultado en tarjeta
+  Widget _buildResultCard(String titulo, String valor, {Color? color}) {
     return Card(
-      elevation: 2,
       margin: const EdgeInsets.symmetric(vertical: 4),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              titulo,
-              style: TextStyle(fontSize: 15, color: Colors.grey[800]),
-            ),
+            Text(titulo, style: TextStyle(color: Colors.grey[700])),
             Text(
               valor,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
-                color: color ?? const Color(0xFF1B5E20),
+                color: color ?? const Color(0xFF1E5631),
               ),
             ),
           ],
@@ -579,363 +376,428 @@ class _CalculadoraPageState extends State<CalculadoraPage> {
     );
   }
 
-  Widget _buildInputField(
-      TextEditingController controller, String label, String hint) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Nueva Simulación'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.save),
+            onPressed: _guardarLote,
+            tooltip: 'Guardar Lote',
+          ),
+        ],
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: Colors.white,
+          tabs: const [
+            Tab(text: 'Datos'),
+            Tab(text: 'Alimento'),
+            Tab(text: 'Resultados'),
+          ],
+          onTap: (index) => setState(() => _selectedTab = index),
         ),
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       ),
-      keyboardType: TextInputType.number,
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildDatosTab(),
+          _buildAlimentoTab(),
+          _buildResultadosTab(),
+        ],
+      ),
     );
   }
+
+  // Pestaña de Datos
+  Widget _buildDatosTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  _buildInputField(
+                    _pollosController,
+                    'Cantidad de Pollos',
+                    'Ej: 600',
+                    Icons.numbers,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildInputField(
+                    _precioVentaController,
+                    'Precio de Venta (S/ kg)',
+                    'Ej: 11.0',
+                    Icons.attach_money,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildInputField(
+                    _precioAlimentoController,
+                    'Precio Alimento (S/ kg)',
+                    'Ej: 2.87',
+                    Icons.attach_money,
+                  ),
+                  const SizedBox(height: 12),
+                  _buildInputField(
+                    _costoPollitoController,
+                    'Costo Pollito BB (S/)',
+                    'Ej: 3.5',
+                    Icons.attach_money,
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 3,
+                        child: _buildInputField(
+                          _mortalidadController,
+                          'Mortalidad',
+                          'Ej: 5',
+                          Icons.warning,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: DropdownButtonFormField<String>(
+                          value: _mortalidadTipo,
+                          items: const [
+                            DropdownMenuItem(value: '%', child: Text('%')),
+                            DropdownMenuItem(value: 'cantidad', child: Text('Cantidad')),
+                          ],
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                _mortalidadTipo = value;
+                                _calcular();
+                              });
+                            }
+                          },
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: 'Tipo',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  _buildInputField(
+                    _otrosCostosController,
+                    'Otros Costos (S/)',
+                    'Ej: 700',
+                    Icons.money_off,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Los datos se actualizan automáticamente',
+            style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Pestaña de Alimento
+  Widget _buildAlimentoTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'RESUMEN DE ALIMENTO',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E5631),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildResultCard('Total Kg Alimento', '${_totalKg.toStringAsFixed(0)} kg'),
+                  const Divider(),
+                  _buildResultCard('Sacos Inicio (20%)', _sacosInicio.toStringAsFixed(0)),
+                  _buildResultCard('Sacos Crecimiento (35%)', _sacosCrec.toStringAsFixed(0)),
+                  _buildResultCard('Sacos Acabado (45%)', _sacosAcab.toStringAsFixed(0)),
+                  _buildResultCard(
+                    'Total Sacos',
+                    _sacosTotal.toStringAsFixed(0),
+                    color: const Color(0xFFF9A825),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'FLUJO SEMANAL',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E5631),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: const [
+                      Text('Semana', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+                      Text('Alimento (kg)', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+                      Text('Costo (S/)', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+                    ],
+                  ),
+                  const Divider(),
+                  ..._flujoSemanal.map((item) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('${item['semana']}',
+                                style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF1E5631))),
+                            Text('${item['kg'].toStringAsFixed(0)} kg'),
+                            Text('S/ ${item['costo'].toStringAsFixed(2)}',
+                                style: const TextStyle(fontWeight: FontWeight.w500)),
+                          ],
+                        ),
+                      )),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Pestaña de Resultados
+  Widget _buildResultadosTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  const Text(
+                    'RESULTADOS FINANCIEROS',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF1E5631),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildResultCard('Costo Alimento', 'S/ ${_costoAlimento.toStringAsFixed(2)}', color: Colors.blue),
+                  _buildResultCard('Costo Pollitos BB', 'S/ ${_costoPollitos.toStringAsFixed(2)}', color: Colors.blue),
+                  _buildResultCard('Otros Costos', 'S/ ${_costoOtros.toStringAsFixed(2)}', color: Colors.blue),
+                  _buildResultCard('Costo Total', 'S/ ${_costoTotal.toStringAsFixed(2)}', color: Colors.red),
+                  const Divider(),
+                  _buildResultCard('Pollos Vivos', _pollosVivos.toStringAsFixed(0)),
+                  _buildResultCard('Pollos Muertos', _pollosMuertos.toStringAsFixed(0)),
+                  const Divider(),
+                  _buildResultCard('Ingreso Real', 'S/ ${_ingresoReal.toStringAsFixed(2)}', color: const Color(0xFF2E7D32)),
+                  _buildResultCard(
+                    'Ganancia Real',
+                    'S/ ${_gananciaReal.toStringAsFixed(2)}',
+                    color: _gananciaReal >= 0 ? const Color(0xFF4CAF50) : Colors.red,
+                  ),
+                  _buildResultCard(
+                    'Ganancia por Pollo',
+                    'S/ ${_gananciaXPollo.toStringAsFixed(2)}',
+                    color: _gananciaXPollo >= 0 ? const Color(0xFF4CAF50) : Colors.red,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Los datos se guardan automáticamente al presionar el ícono de guardar',
+            style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic, fontSize: 12),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Pantalla de Historial
+class HistorialScreen extends StatelessWidget {
+  const HistorialScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Nuevo Cálculo'),
-        backgroundColor: const Color(0xFF1B5E20),
-        foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: guardarLote,
-            tooltip: 'Guardar Lote',
-          ),
-        ],
+        title: const Text('Historial de Lotes'),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.grey[50]!, Colors.white],
-          ),
+      body: const _HistorialContent(),
+    );
+  }
+}
+
+class _HistorialContent extends StatefulWidget {
+  const _HistorialContent();
+
+  @override
+  State<_HistorialContent> createState() => _HistorialContentState();
+}
+
+class _HistorialContentState extends State<_HistorialContent> {
+  List<Lote> get _historial => _CalculadoraScreenState._historial;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_historial.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('🐔', style: TextStyle(fontSize: 60)),
+            const SizedBox(height: 16),
+            Text(
+              'No hay lotes guardados',
+              style: TextStyle(color: Colors.grey[600], fontSize: 18),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Realiza una simulación y guarda el lote',
+              style: TextStyle(color: Colors.grey[500]),
+            ),
+          ],
         ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Tabs
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey[200]!,
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    _buildTab('Datos', 0),
-                    _buildTab('Alimento', 1),
-                    _buildTab('Resultados', 2),
-                  ],
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: _historial.length,
+      itemBuilder: (context, index) {
+        final lote = _historial[_historial.length - 1 - index]; // más reciente primero
+        return Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border(
+                left: BorderSide(
+                  color: lote.ganancia >= 0 ? const Color(0xFF4CAF50) : Colors.red,
+                  width: 6,
                 ),
               ),
-              const SizedBox(height: 16),
-
-              // Contenido según tab
-              if (_selectedTab == 0) _buildDatosTab(),
-              if (_selectedTab == 1) _buildAlimentoTab(),
-              if (_selectedTab == 2) _buildResultadosTab(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTab(String label, int index) {
-    bool isActive = _selectedTab == index;
-    return Expanded(
-      child: InkWell(
-        onTap: () => setState(() => _selectedTab = index),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          decoration: BoxDecoration(
-            color: isActive ? const Color(0xFF1B5E20) : Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Center(
-            child: Text(
-              label,
-              style: TextStyle(
-                color: isActive ? Colors.white : Colors.grey[600],
-                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                fontSize: 15,
-              ),
             ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDatosTab() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'DATOS DE PRODUCCIÓN',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1B5E20),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                _buildInputField(pollosCtrl, 'Cantidad de Pollos', 'Ej: 800'),
-                const SizedBox(height: 12),
-                _buildInputField(diasCtrl, 'Días de Crianza', 'Ej: 42'),
-                const SizedBox(height: 12),
-                _buildInputField(consumoCtrl, 'Consumo por Pollo (kg)',
-                    'Ej: 4.5'),
-                const SizedBox(height: 12),
-                _buildInputField(precioCtrl, 'Precio de Venta (S/ kg)',
-                    'Ej: 11.0'),
-                const SizedBox(height: 12),
-                _buildInputField(mortalidadCtrl, 'Porcentaje de Mortalidad',
-                    'Ej: 5.0'),
-                const SizedBox(height: 12),
-                _buildInputField(costoBBController, 'Costo Pollito BB (S/)',
-                    'Ej: 3.5'),
-                const SizedBox(height: 12),
-                _buildInputField(pesoMuertoController, 'Peso Pollo Muerto (kg)',
-                    'Ej: 2.8'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: calcular,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF9A825),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: const Text(
-                    'CALCULAR',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildAlimentoTab() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'ALIMENTO',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1B5E20),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                _buildResultado('Total Kg Alimento', '${totalKg.toStringAsFixed(0)} kg'),
-                const SizedBox(height: 4),
-                _buildResultado('Sacos Inicio 20%', sacosI.toStringAsFixed(0)),
-                _buildResultado('Sacos Crecimiento 35%', sacosC.toStringAsFixed(0)),
-                _buildResultado('Sacos Acabado 45%', sacosA.toStringAsFixed(0)),
-                _buildResultado('Total Sacos', sacosT.toStringAsFixed(0),
-                    color: const Color(0xFFF9A825)),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'INGREDIENTES',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1B5E20),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                _buildResultado('Maíz 64%', '${kgMaiz.toStringAsFixed(0)} kg'),
-                _buildResultado('Torta de Soya 28%', '${kgSoya.toStringAsFixed(0)} kg'),
-                _buildResultado('Aceite 0.9%', '${kgAceite.toStringAsFixed(0)} kg'),
-                _buildResultado('Núcleo 5%', '${kgNucleo.toStringAsFixed(0)} kg'),
-                const SizedBox(height: 4),
-                _buildResultado(
-                    'Costo Ingredientes', 'S/ ${costoIngred.toStringAsFixed(2)}',
-                    color: const Color(0xFFE53935)),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildResultadosTab() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'RESULTADOS FINANCIEROS',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1B5E20),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                _buildResultado('Costo Alimento', 'S/ ${costoAlimento.toStringAsFixed(2)}',
-                    color: Colors.blue),
-                _buildResultado('Costo Pollitos BB', 'S/ ${costoPollitosBB.toStringAsFixed(2)}',
-                    color: Colors.blue),
-                _buildResultado('Costo Otros', 'S/ ${costoOtros.toStringAsFixed(2)}',
-                    color: Colors.blue),
-                _buildResultado('Costo Total', 'S/ ${costoTotal.toStringAsFixed(2)}',
-                    color: const Color(0xFFE53935)),
-                const SizedBox(height: 8),
-                const Divider(),
-                _buildResultado('Ingreso por Vivos', 'S/ ${(pollosVivos * 3 * double.parse(precioCtrl.text)).toStringAsFixed(2)}',
-                    color: const Color(0xFF2E7D32)),
-                _buildResultado('Ingreso por Muertos', 'S/ ${((double.parse(mortalidadCtrl.text)/100 * double.parse(pollosCtrl.text)) * double.parse(pesoMuertoController.text) * double.parse(precioCtrl.text)).toStringAsFixed(2)}',
-                    color: const Color(0xFF2E7D32)),
-                _buildResultado('Ingreso Total', 'S/ ${ingresoReal.toStringAsFixed(2)}',
-                    color: const Color(0xFF2E7D32)),
-                const SizedBox(height: 8),
-                const Divider(),
-                _buildResultado('Ganancia Real', 'S/ ${gananciaReal.toStringAsFixed(2)}',
-                    color: gananciaReal >= 0 ? const Color(0xFF4CAF50) : const Color(0xFFE53935)),
-                _buildResultado('Ganancia x Pollo', 'S/ ${gananciaXPollo.toStringAsFixed(2)}',
-                    color: gananciaXPollo >= 0 ? const Color(0xFF4CAF50) : const Color(0xFFE53935)),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 12),
-        Card(
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'FLUJO SEMANAL',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF1B5E20),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Expanded(
-                      flex: 2,
-                      child: Text('Semana', style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.grey)),
-                    ),
-                    const Expanded(
-                      flex: 3,
-                      child: Text('Alimento (kg)', style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.grey)),
-                    ),
-                    const Expanded(
-                      flex: 4,
-                      child: Text('Costo (S/)', style: TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.grey)),
-                    ),
-                  ],
-                ),
-                const Divider(),
-                ...flujoSemanal.map((e) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            flex: 2,
-                            child: Text('${e['sem']}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF1B5E20))),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Text('${e['kg'].toStringAsFixed(0)} kg'),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Text(
-                                'S/ ${e['costoTotal'].toStringAsFixed(2)}'),
-                          ),
-                        ],
+            child: ListTile(
+              contentPadding: const EdgeInsets.all(16),
+              title: Row(
+                children: [
+                  const Text('🐔', style: TextStyle(fontSize: 24)),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Lote ${_historial.length - index}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF1E5631),
                       ),
-                    )).toList(),
-              ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: lote.ganancia >= 0 ? const Color(0xFFE8F5E9) : const Color(0xFFFFEBEE),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      'S/ ${lote.ganancia.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: lote.ganancia >= 0 ? const Color(0xFF2E7D32) : Colors.red,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.numbers, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text('${lote.pollos} pollos'),
+                      const SizedBox(width: 16),
+                      const Icon(Icons.warning, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text('Mortalidad: ${lote.mortalidad.toStringAsFixed(1)}%'),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.attach_money, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text('Venta: S/ ${lote.precioVenta}/kg'),
+                      const SizedBox(width: 16),
+                      const Icon(Icons.money_off, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text('Alimento: S/ ${lote.precioAlimento}/kg'),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.trending_up, size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text('Ganancia x pollo: S/ ${lote.gananciaXPollo.toStringAsFixed(2)}'),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${lote.fecha.day}/${lote.fecha.month}/${lote.fecha.year}',
+                    style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                  ),
+                ],
+              ),
+              trailing: IconButton(
+                icon: Icon(Icons.delete, color: Colors.red[300]),
+                onPressed: () {
+                  setState(() {
+                    _historial.remove(lote);
+                  });
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Lote eliminado'),
+                      backgroundColor: Colors.red,
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-        ),
-        const SizedBox(height: 12),
-        const Text(
-          'Los datos se guardan automáticamente en el historial',
-          style: TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-            fontStyle: FontStyle.italic,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+        );
+      },
     );
   }
 }
